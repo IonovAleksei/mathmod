@@ -67,10 +67,9 @@ data_k = all_k %>%
   group_by(id,year,month) %>% 
   summarize(tsum = sum(tavg)) %>% 
   group_by(month) %>% summarize(St = mean(tsum))
-#Создадим и считаем фал CSV с коэффициентами и внесем остальные
-#коэффициенты для расчета урожайности пшеницы 
-coef=read.csv("coef.csv", header = TRUE,
-              sep = ";", dec = ",")
+
+afi=c(0.000,0.000,0.000,32.110,26.310,25.640,23.200,18.730,16.300,13.830,0.000,0.000)
+bfi=c(0.000,0.000,0.000,11.300,9.260,9.030,8.160,6.590,5.730,4.870,0.000,0.000)
 
 y=1.0
 Kf=300
@@ -79,7 +78,7 @@ Lj=2.2
 Ej=25
 #Рассчитаем урожайность по месяцам
 data_k= data_k %>% 
-  mutate(Fi=(coef$afi)+(coef$bfi)*y*(data_k$St))
+  mutate(Fi=(afi+(bfi*y*data_k$St)))
 data_k= data_k %>% mutate(Yj=(((data_k$Fi)*(tdi$di)*Kf)/(Qj*Lj*(100-Ej))))
 #Расчитываем суммарную урожайность как сумму по месяцам
 YIELD=sum(data_k$Yj);YIELD
